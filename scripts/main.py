@@ -10,7 +10,7 @@ from pygame.locals import *
 BAL_SIZE = 18       # ボールサイズ
 F_RATE   = 60       # フレームレート
 K_REPEAT = 20       # キーリピート発生間隔
-RKT_SPD  = 10       # ラケット移動速度
+USER_SPD  = 10      # ユーザー移動速度
 BAL_SPD  = 10       # ボール移動速度
 F_SIZE   = 60       # フォントサイズ
 S_TIME   = 2        # START画面時間(秒)
@@ -24,9 +24,19 @@ class User(pygame.sprite.Sprite):
         self.surface=surface
         self.ini=ini
         self.color=color
+        self.x=self.ini[0]
+    def x(self,x):
+        self.x=x
+    def return_x(self):
+        return self.x
+    def addx(self,add):
+        self.x+=add
     def update(self,t):
-        x=self.ini[0]
-        pygame.draw.circle(self.surface,self.color, (x,self.ini[1]), 10)
+        if self.x<=0:
+            self.x=0
+        elif self.x>=400:
+            self.x=400
+        pygame.draw.circle(self.surface,self.color, (self.x,self.ini[1]), 10)
         return
 
 class Bullet(pygame.sprite.Sprite):
@@ -34,11 +44,23 @@ class Bullet(pygame.sprite.Sprite):
         self.surface=surface
         self.ini=ini
         self.color=color
+        self.x=self.ini[0]
+        self.y=self.ini[1]
+        self.shootsp=0
+        self.shootFlag=False
+    def shoot(self,x,shootsp):
+        self.shootsp=shootsp
+        self.x=x
+        self.y=self.ini[1]
+        self.shootFlag=True
     def update(self,t):
-        x=self.ini[0]
-        y=self.ini[1]
-        pygame.draw.ellipse(self.surface,self.color, (x,y,5,20,))
-        return
+        if self.shootFlag:
+            self.y+=self.shootsp
+            if self.y<=0 or self.y>=640:
+                self.y=self.ini[1]
+                self.shootFlag=False
+            else:
+                pygame.draw.ellipse(self.surface,self.color, (self.x,self.y,5,20,))
 
 ############################
 ### メイン関数
@@ -72,10 +94,10 @@ def main():
         ### 背景色設定
         surface.fill((0,0,0))
         ###描画処理
-        user1.update(t)
-        user2.update(t)
         bullet1.update(t)
         bullet2.update(t)
+        user1.update(t)
+        user2.update(t)
         ### 画面更新
         pygame.display.update()
         ### イベント処理
@@ -88,9 +110,11 @@ def main():
                     exit()
                 ### キー操作
                 if event.key == K_LEFT:
-                    racket_pos -= RKT_SPD
+                    user1.addx(USER_SPD)
                 if event.key == K_RIGHT:
-                    racket_pos += RKT_SPD
+                    user1.addx(-USER_SPD)
+                if event.key == K_SPACE:
+                    bullet1.shoot(user1.return_x(),-10)
 
 ############################
 ### 終了関数
