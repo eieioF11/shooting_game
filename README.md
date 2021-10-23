@@ -14,4 +14,5 @@ pygameディレクトリに移動
 ```
 # pygame参考
 [図形表示](https://shizenkarasuzon.hatenablog.com/entry/2018/12/29/213355)\
-[キー入力](https://shizenkarasuzon.hatenablog.com/entry/2019/02/08/184932)
+[キー入力](https://shizenkarasuzon.hatenablog.com/entry/2019/02/08/184932)\
+[画像入力](https://shizenkarasuzon.hatenablog.com/entry/2019/02/23/151418)

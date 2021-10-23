@@ -1,4 +1,5 @@
-
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 ### インポート
 import sys
 import time
@@ -7,33 +8,38 @@ from pygame.locals import *
 from Timer import Timer
 from GameIO import *
 
-### 定数
-D_SIZE_X = 400
-D_SIZE_Y = 640
-USER_POS = 40
-USER_HP  = 10
-USER1_HP_X= 10
-USER1_HP_Y= 10
-USER2_HP_X= 255
-USER2_HP_Y= 10
-BAL_SIZE = 18       # ボールサイズ
-F_RATE   = 60       # フレームレート
-K_REPEAT = 20       # キーリピート発生間隔
-USER_SPD = 10       # ユーザー移動速度
-USER_X   = 600      #
-BAL_SPD  = 10       # ボール移動速度
-F_SIZE   = 60       # フォントサイズ
-S_TIME   = 1        # START画面時間(秒)
-E_TIME   = 3        # CLEAR画面時間(秒)
+import random
+
+### 設定
+D_SIZE_X     = 400      #windowサイズ
+D_SIZE_Y     = 640
+BG_SP        = 5        #背景スクロールスピード
+USER_POS     = 40       #ユーザーの位置(上もしくは下からの距離)
+USER_X       = 600      #ユーザーの初期位置(x)
+USER_HP      = 10       #ユーザーのHP上限
+USER_SPD     = 10       # ユーザー移動速度
+USER1_HP_X   = 10       #ユーザー１のHP表示場所
+USER1_HP_Y   = 10
+USER2_HP_X   = 240      #ユーザー2のHP表示場所
+USER2_HP_Y   = 10
+USERIMG_SIZE = 30       #imageサイズ
+BAL_SIZE     = 10       # ボールサイズ
+F_RATE       = 60       # フレームレート
+K_REPEAT     = 20       # キーリピート発生間隔
+BAL_SPD      = 10       # ボール移動速度
+F_SIZE       = 60       # フォントサイズ
+S_TIME       = 1        # START画面時間(秒)
+E_TIME       = 2        # CLEAR画面時間(秒)
 
 ### 画面定義(X軸,Y軸,横,縦)
 SURFACE  = Rect(0, 0, D_SIZE_X, D_SIZE_Y) # 画面サイズ
 
 class User(pygame.sprite.Sprite):
-    def __init__(self,surface,ini,color):
+    def __init__(self,surface,ini,img):
         self.surface=surface
         self.ini=ini
-        self.color=color
+        self.img=img
+        self.color=[255,255,255]
         self.x=self.ini[0]
         self.Hit=0
         self.hp=USER_HP
@@ -68,13 +74,11 @@ class User(pygame.sprite.Sprite):
                 self.t3.reset()
                 self.hitflag=True
             if self.hitflag:
-                c=[0,0,0]
                 if self.t3.stand_by(100):
                     self.t2.reset()
                     self.hitflag=False
             else:
-                c=self.color
-            pygame.draw.circle(self.surface,c, (self.x,self.ini[1]), 10)
+                self.surface.blit(self.img,(self.x-(USERIMG_SIZE//2),self.ini[1]-(USERIMG_SIZE//2)))
             if self.t1.stand_by(1000):
                 self.t2.reset()
                 self.t1.reset()
@@ -82,7 +86,7 @@ class User(pygame.sprite.Sprite):
                 self.hpflag=False
                 self.hitflag=False
         else:
-            pygame.draw.circle(self.surface,self.color, (self.x,self.ini[1]), 10)
+            self.surface.blit(self.img,(self.x-(USERIMG_SIZE//2),self.ini[1]-(USERIMG_SIZE//2)))
         if self.hp<=0:
             self.hp=0
             return True
@@ -123,6 +127,7 @@ def menu(surface):
     cancel=sound("cancel3.wav")
     input_box = InputBox(100, 100, 200, 40)
     button = Button(100, 150, 140, 40, "Please Enter")
+    button2 = Button(100, 250, 140, 40, "Single")
     exit_sw = False
     bt=False
     t=Timer()
@@ -145,9 +150,17 @@ def menu(surface):
             input_box.update()
             button.handle_event(event)
             button.update()
+            button2.handle_event(event)
+            button2.update()
         surface.fill((30, 30, 30))
         input_box.draw(surface)
         button.draw(surface)
+        button2.draw(surface)
+        if button2.onClick():
+            ip=[]
+            exit_sw=True
+            decide.play()
+            while decide.update(1):pass
         if bt:
             if button.onClick():
                 try:
@@ -170,21 +183,36 @@ def menu(surface):
         pygame.display.update()
     return ip
 
-def hpshow(surface,c,p,hp):
+def hpshow(surface,img,p,hp):
     for i in range(hp):
-        pygame.draw.circle(surface,c,(p[0]+i*15,p[1]),5)
+        surface.blit(img,(p[0]+i*15,p[1]))
 
 ############################
 ### メイン関数
 ############################
 def main():
+    bg_y = 0
     bulletflag=False
+    bulletflag2=False
     GAMEOVER1=GAMEOVER2=False
+    Single=False
+    #音声読み込み
     shot=sound("shot.wav")
     hit1=sound("hit.wav")
     hit2=sound("hit.wav")
     win=sound("win.wav")
-    lose=sound("lose.wav")
+    lose=sound("Lose.wav")
+    ### 画像読み込み
+    rhimg = load_image("redheart.png")
+    bhimg = load_image("blueheart.png")
+    rhimg = pygame.transform.scale(rhimg, (14,14))
+    bhimg = pygame.transform.scale(bhimg, (14,14))
+    U1img = load_image("USER1.png")
+    U2img = load_image("USER2.png")
+    U1img = pygame.transform.scale(U1img, (USERIMG_SIZE,USERIMG_SIZE))
+    U2img = pygame.transform.scale(U2img, (USERIMG_SIZE,USERIMG_SIZE))
+    BGimg = load_image("BG.png")
+    BGimg = pygame.transform.scale(BGimg, (D_SIZE_X,D_SIZE_Y))
     ### 画面初期化
     pygame.init()
     pygame.mixer.init()
@@ -193,14 +221,17 @@ def main():
     clock = pygame.time.Clock()
     ### Object
     t1=Timer()
-    user1=User(surface,[200,600],[255,0,0])
-    user2=User(surface,[200,40],[0,0,255])
+    t2=Timer()
+    user1=User(surface,[200,600],U1img)
+    user2=User(surface,[200,40],U2img)
     bullet1=[]
     bullet2=[]
     ### キーリピート有効
     pygame.key.set_repeat(K_REPEAT)
     ### メニュー
     ip=menu(surface)
+    if len(ip)==0:
+        Single=True
     print(ip)
     ### STARTを表示
     font = pygame.font.Font(None, F_SIZE)
@@ -217,6 +248,11 @@ def main():
         ### 背景色設定
         surface.fill((0,0,0))
         ###描画処理
+        #背景
+        bg_y = (bg_y+BG_SP)%D_SIZE_Y
+        surface.blit(BGimg,[0,bg_y-D_SIZE_Y])
+        surface.blit(BGimg,[0,bg_y])
+        #ゲーム画面
         if not GAMEOVER1 and not GAMEOVER2:
             count=0
             for bullet in bullet1:
@@ -236,9 +272,9 @@ def main():
             user1.hit(count)
             GAMEOVER1=user1.update()
             GAMEOVER2=user2.update()
-            hpshow(surface,[255,0,0],[USER1_HP_X,USER1_HP_Y],user1.Hp())
-            hpshow(surface,[0,0,255],[USER2_HP_X,USER2_HP_Y],user2.Hp())
-        else:
+            hpshow(surface,rhimg,[USER1_HP_X,USER1_HP_Y],user1.Hp())
+            hpshow(surface,bhimg,[USER2_HP_X,USER2_HP_Y],user2.Hp())
+        else:#終了画面
             if GAMEOVER1:
                 text = font.render("LOSE", True, (255,0,0))
                 surface.blit(text, [140,299])
@@ -250,8 +286,16 @@ def main():
             pygame.display.update()
             while lose.update(1):pass
             while win.update(1):pass
-            time.sleep(E_TIME)
-            exit()
+            while True:
+                for event in pygame.event.get():
+                    ### 終了処理
+                    if event.type == QUIT:
+                        exit()
+                    if event.type == KEYDOWN:
+                        if event.key == K_ESCAPE:
+                            exit()
+                if t2.stand_by(E_TIME*1000):
+                    exit()
         ### 画面更新
         pygame.display.update()
         ### 再生
@@ -261,6 +305,7 @@ def main():
         ### イベント処理
         if t1.stand_by(800):#チャタリング防止
             bulletflag=False
+            bulletflag2=False
         for event in pygame.event.get():
             ### 終了処理
             if event.type == QUIT:
@@ -283,6 +328,19 @@ def main():
                     if not bulletflag:
                         bullet2.append(Bullet(surface,[user2.return_x(),USER_POS],[0,255,255],10))
                         bulletflag=True
+
+        if Single:
+            u2r=random.randint(0,1)
+            u2s=random.randint(0,1)
+            if u2r:
+                user2.addx(-USER_SPD)
+            else:
+                user2.addx(USER_SPD)
+            if u2s:
+                if not bulletflag2:
+                    bullet2.append(Bullet(surface,[user2.return_x(),USER_POS],[0,255,255],10))
+                    bulletflag2=True
+
 
 ############################
 ### 終了関数

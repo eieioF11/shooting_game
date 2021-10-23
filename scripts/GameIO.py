@@ -3,6 +3,10 @@ import pygame
 from pygame.locals import *
 from Timer import Timer
 
+def load_image(fname):
+    fpath=os.path.join("images",fname)
+    return pygame.image.load(fpath)
+
 class sound:
     def __init__(self,fname):
         self.fname=os.path.join("sounds",fname)
