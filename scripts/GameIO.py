@@ -5,7 +5,11 @@ from Timer import Timer
 
 def load_image(fname):
     fpath=os.path.join("images",fname)
-    return pygame.image.load(fpath)
+    print(fpath)
+    try:
+    	return pygame.image.load(fpath)
+    except:
+    	return pygame.image.load("../"+fpath)
 
 class sound:
     def __init__(self,fname):
@@ -19,7 +23,10 @@ class sound:
     def update(self,n=-1,t=1):#[s]
         if self.PLAY:
             pygame.mixer.init(frequency = 44100)    # 初期設定
-            pygame.mixer.music.load(self.fname)     # 音楽ファイルの読み込み
+            try:
+            		pygame.mixer.music.load(self.fname)     # 音楽ファイルの読み込み
+            except:
+            		pygame.mixer.music.load("../"+self.fname)     # 音楽ファイルの読み込み
             pygame.mixer.music.play(n)             # 音楽の再生回数(ループ再生)
             if n==-1:
                 if self.t1.stand_by(t*1000):
