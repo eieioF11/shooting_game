@@ -226,8 +226,6 @@ def main():
     user2=User(surface,[200,40],U2img)
     bullet1=[]
     bullet2=[]
-    ### キーリピート有効
-    pygame.key.set_repeat(K_REPEAT)
     ### メニュー
     ip=menu(surface)
     if len(ip)==0:
@@ -241,6 +239,8 @@ def main():
     pygame.display.update()
     ### 一時停止
     time.sleep(S_TIME)
+    ### キーリピート有効
+    pygame.key.set_repeat(K_REPEAT)
     ### 無限ループ
     while True:
         ### フレームレート設定
@@ -314,7 +314,7 @@ def main():
                 if event.key == K_ESCAPE:
                     exit()
                 ### キー操作
-                pygame.key.set_repeat(100, 20)
+                #pygame.key.set_repeat(100, 20)
                 if event.key == K_LEFT:
                     user1.addx(-USER_SPD)
                 if event.key == K_RIGHT:
