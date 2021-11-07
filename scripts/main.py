@@ -8,6 +8,8 @@ from pygame.locals import *
 from Timer import Timer
 from GameIO import *
 
+from client import *
+
 import random
 
 ### 設定
@@ -48,7 +50,7 @@ class User(pygame.sprite.Sprite):
         self.t2=Timer()
         self.t3=Timer()
         self.hitflag=False
-    def x(self,x):
+    def X(self,x):
         self.x=x
     def return_x(self):
         return self.x
@@ -181,7 +183,7 @@ def menu(surface):
         text = font.render("Enter IP", True, (255,255,255))
         surface.blit(text, [10,10])
         pygame.display.update()
-    return ip
+    return IP_TEXT , ip
 
 def hpshow(surface,img,p,hp):
     for i in range(hp):
@@ -227,10 +229,10 @@ def main():
     bullet1=[]
     bullet2=[]
     ### メニュー
-    ip=menu(surface)
+    iptxt,ip =menu(surface)
     if len(ip)==0:
         Single=True
-    print(ip)
+    print(iptxt,ip)
     ### STARTを表示
     font = pygame.font.Font(None, F_SIZE)
     text = font.render("START", True, (96,96,255))
@@ -241,6 +243,10 @@ def main():
     time.sleep(S_TIME)
     ### キーリピート有効
     pygame.key.set_repeat(K_REPEAT)
+    ###送受信データ作成
+    wdata=[ip[3],200,False]
+    rdata=[]
+    print(wdata)   
     ### 無限ループ
     while True:
         ### フレームレート設定
@@ -328,7 +334,7 @@ def main():
                     if not bulletflag:
                         bullet2.append(Bullet(surface,[user2.return_x(),USER_POS],[0,255,255],10))
                         bulletflag=True
-
+		
         if Single:
             u2r=random.randint(0,1)
             u2s=random.randint(0,1)
@@ -340,6 +346,16 @@ def main():
                 if not bulletflag2:
                     bullet2.append(Bullet(surface,[user2.return_x(),USER_POS],[0,255,255],10))
                     bulletflag2=True
+        else:
+            rdata=communication(iptxt,wdata)
+            print(rdata)
+            user2.X(rdata[1])
+            if rdata[2]:
+                if not bulletflag2:
+                    bullet2.append(Bullet(surface,[user2.return_x(),USER_POS],[0,255,255],10))
+                    bulletflag2=True
+
+			
 
 
 ############################
