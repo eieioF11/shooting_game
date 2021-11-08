@@ -257,7 +257,7 @@ def main():
     rdata=[]
     print(wdata)
     ###接続
-    connect(iptxt)   
+    #connect(iptxt)   
     ### 無限ループ
     while True:
         ### フレームレート設定
@@ -352,15 +352,18 @@ def main():
             if u2s:
                 if not bulletflag2:
                     bullet2.append(Bullet(surface,[user2.return_x(),USER_POS],[0,255,255],10))
+                    wdata[2]=True
                     bulletflag2=True
         else:
-            rdata=communication(wdata)
+            wdata[1]=user1.return_x()
+            rdata=communication(iptxt,wdata)
             print(rdata)
             user2.X(rdata[1])
             if rdata[2]:
                 if not bulletflag2:
                     bullet2.append(Bullet(surface,[user2.return_x(),USER_POS],[0,255,255],10))
                     bulletflag2=True
+            wdata[2]=False
 
 			
 

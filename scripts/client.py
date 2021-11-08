@@ -2,13 +2,11 @@ import socket
 
 
 N = 256
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-def connect(ip):
+def communication(ip,data):
 	port = 8000
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	s.connect((ip, port))
-
-def communication(data):
 	senddata = str(data[0]) + "," + str(data[1]) + "," +str(data[2])
 	try:
 		s.send(senddata.encode("utf-8"))
