@@ -244,7 +244,16 @@ def main():
     ### キーリピート有効
     pygame.key.set_repeat(K_REPEAT)
     ###送受信データ作成
-    wdata=[ip[3],200,False]
+    # ホスト名を取得、表示
+    host = socket.gethostname()
+    print(host)
+    # ipアドレスを取得、表示
+    myip = socket.gethostbyname(host)
+    myip=myip.split('.')
+    print(myip)
+    #id作成
+    id=int(myip[3])
+    wdata=[id,200,False]
     rdata=[]
     print(wdata)   
     ### 無限ループ
@@ -329,10 +338,6 @@ def main():
                     if not bulletflag:
                         shot.play()
                         bullet1.append(Bullet(surface,[user1.return_x(),D_SIZE_Y-USER_POS],[255,255,0],-10))
-                        bulletflag=True
-                if event.key == K_LCTRL:
-                    if not bulletflag:
-                        bullet2.append(Bullet(surface,[user2.return_x(),USER_POS],[0,255,255],10))
                         bulletflag=True
 		
         if Single:
