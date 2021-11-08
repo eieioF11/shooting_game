@@ -4,7 +4,7 @@ import socket
 N = 256
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-def connect(ip)
+def connect(ip):
 	port = 8000
 	s.connect((ip, port))
 
