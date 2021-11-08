@@ -4,9 +4,11 @@ import time
 
 global first
 first=True
+global save_id
 save_id=0
 def identification(id):
 	global first
+	global save_id
 	if first:
 		save_id=id
 		first=False
