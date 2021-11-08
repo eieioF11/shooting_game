@@ -70,7 +70,7 @@ class Button:
 
 
 class InputBox:
-    def __init__(self, x, y, w, h, text='192.168.100.100'):
+    def __init__(self, x, y, w, h, text='172.16.30.187'):
         self.COLOR_INACTIVE = pygame.Color('lightskyblue3')
         self.COLOR_ACTIVE = pygame.Color('dodgerblue2')
         self.FONT = pygame.font.Font(None, 40)

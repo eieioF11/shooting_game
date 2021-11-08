@@ -2,26 +2,27 @@ import socket
 import threading
 import time
 
+global first
 first=True
 save_id=0
 def identification(id):
-    if first:
-        save_id=id
-        first=False
-        return True
-    if id==save_id:
-        return True
-    return False
+	global first
+	if first:
+		save_id=id
+		first=False
+		return True
+	if id==save_id:
+		return True
+	return False
 
 
 PORT = 8000
 N = 256
 clientno = 0
-resive1 = ""
-resive2 = ""	
+resive1 = "0,200,False"
+resive2 = "0,200,False"	
 
 def send_data(client, clientno):
-	data = ("1")
 	resive = client.recv(N)
 	temp = resive.decode("utf-8")
 	temp = temp.split(",")
