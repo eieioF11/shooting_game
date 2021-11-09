@@ -253,16 +253,17 @@ def main():
     print(myip)
     #id作成
     id=int(myip[3])
+    #id=100
     wdata=[id,200,False]
     rdata=[]
     print(wdata)
     #接続処理
     connect=False
     while not connect:
-        font = pygame.font.Font(None, 30)
-        text = font.render("Waiting for connection", True, (96,96,255))
+        fontc = pygame.font.Font(None, 30)
+        textc = font.render("Waiting for connection", True, (96,96,255))
         surface.fill((0,0,0))
-        surface.blit(text, [90,299])
+        surface.blit(textc, [90,299])
         pygame.display.update()
         for event in pygame.event.get():
             ### 終了処理
@@ -273,7 +274,7 @@ def main():
                     exit()
         rdata=communication(iptxt,wdata)
         if rdata[0]!=0:
-            connect=False
+            connect=True
 
     ### 無限ループ
     while True:
@@ -357,6 +358,7 @@ def main():
                     if not bulletflag:
                         shot.play()
                         bullet1.append(Bullet(surface,[user1.return_x(),D_SIZE_Y-USER_POS],[255,255,0],-10))
+                        wdata[2]=True
                         bulletflag=True
 
         if Single:
@@ -369,7 +371,6 @@ def main():
             if u2s:
                 if not bulletflag2:
                     bullet2.append(Bullet(surface,[user2.return_x(),USER_POS],[0,255,255],10))
-                    wdata[2]=True
                     bulletflag2=True
         else:
             wdata[1]=user1.return_x()
