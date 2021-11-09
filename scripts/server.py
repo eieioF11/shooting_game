@@ -1,6 +1,6 @@
 import socket
 import threading
-import time
+import sys
 
 global first
 first=True
@@ -23,8 +23,8 @@ N = 256
 clientno = 0
 global resive1
 global resive2
-resive1 = "0,200,False".encode("utf-8")
-resive2 = "0,200,False".encode("utf-8")
+resive1 = "0,200,0".encode("utf-8")
+resive2 = "0,200,0".encode("utf-8")
 
 def send_data(client, clientno):
 	global resive1
@@ -49,6 +49,14 @@ server.bind(("",PORT))
 server.listen(0)
 
 while True:
+	host = socket.gethostname()
+	myip = socket.gethostbyname(host)
+	print(myip)
 	client, addr = server.accept()
 	p = threading.Thread(target = send_data, args = (client, clientno))
-	p.start()
+	try:
+		p.start()
+	except KeyboardInterrupt:
+		p.exit()
+		server.close()
+		sys.exit(1)

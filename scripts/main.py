@@ -256,8 +256,10 @@ def main():
     wdata=[id,200,False]
     rdata=[]
     print(wdata)
-    ###接続
-    #connect(iptxt)   
+    while True:
+        rdata=communication(iptxt,wdata)
+        if rdata[0]!=0:
+            break
     ### 無限ループ
     while True:
         ### フレームレート設定
@@ -341,7 +343,7 @@ def main():
                         shot.play()
                         bullet1.append(Bullet(surface,[user1.return_x(),D_SIZE_Y-USER_POS],[255,255,0],-10))
                         bulletflag=True
-		
+
         if Single:
             u2r=random.randint(0,1)
             u2s=random.randint(0,1)
@@ -365,7 +367,7 @@ def main():
                     bulletflag2=True
             wdata[2]=False
 
-			
+
 
 
 ############################
