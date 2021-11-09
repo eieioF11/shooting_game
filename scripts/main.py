@@ -58,6 +58,8 @@ class User(pygame.sprite.Sprite):
         self.x+=add
     def Hp(self):
         return self.hp
+    def updateHp(self,hp):
+        self.hp=hp
     def hit(self,num):
         if num!=0:
             self.Hit=num
@@ -253,15 +255,14 @@ def main():
     print(myip)
     #id作成
     id=int(myip[3])
-    #id=100
-    wdata=[id,200,False]
+    wdata=[id,200,False,10]
     rdata=[]
     print(wdata)
     #接続処理
     connect=False
     while not connect:
         fontc = pygame.font.Font(None, 30)
-        textc = font.render("Waiting for connection", True, (96,96,255))
+        textc = fontc.render("Waiting for connection", True, (96,96,255))
         surface.fill((0,0,0))
         surface.blit(textc, [90,299])
         pygame.display.update()
@@ -374,7 +375,9 @@ def main():
                     bulletflag2=True
         else:
             wdata[1]=user1.return_x()
+            wdata[3]=user1.Hp()
             rdata=communication(iptxt,wdata)
+            user2.updateHp(rdata[3])
             print(rdata)
             user2.X(rdata[1])
             if rdata[2]:
