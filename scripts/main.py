@@ -256,10 +256,25 @@ def main():
     wdata=[id,200,False]
     rdata=[]
     print(wdata)
-    while True:
+    #接続処理
+    connect=False
+    while not connect:
+        font = pygame.font.Font(None, 30)
+        text = font.render("Waiting for connection", True, (96,96,255))
+        surface.fill((0,0,0))
+        surface.blit(text, [90,299])
+        pygame.display.update()
+        for event in pygame.event.get():
+            ### 終了処理
+            if event.type == QUIT:
+                exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    exit()
         rdata=communication(iptxt,wdata)
         if rdata[0]!=0:
-            break
+            connect=False
+
     ### 無限ループ
     while True:
         ### フレームレート設定
