@@ -35,7 +35,7 @@ E_TIME       = 2        # CLEAR画面時間(秒)
 
 ### 画面定義(X軸,Y軸,横,縦)
 SURFACE  = Rect(0, 0, D_SIZE_X, D_SIZE_Y) # 画面サイズ
-
+###プレイヤークラス
 class User(pygame.sprite.Sprite):
     def __init__(self,surface,ini,img):
         self.surface=surface
@@ -95,7 +95,7 @@ class User(pygame.sprite.Sprite):
             self.hp=0
             return True
         return False
-
+###銃弾クラス
 class Bullet(pygame.sprite.Sprite):
     def __init__(self,surface,ini,color,shootsp):
         self.surface=surface
@@ -124,7 +124,7 @@ class Bullet(pygame.sprite.Sprite):
         else:
             pygame.draw.ellipse(self.surface,self.color, (self.x,self.y,5,20,))
         return False
-
+###メニュー表示
 def menu(surface):
     decide=sound("decide15.wav")
     error=sound("error3.wav")
@@ -186,7 +186,7 @@ def menu(surface):
         surface.blit(text, [10,10])
         pygame.display.update()
     return IP_TEXT , ip
-
+###HP表示
 def hpshow(surface,img,p,hp):
     for i in range(hp):
         surface.blit(img,(p[0]+i*15,p[1]))
@@ -255,10 +255,9 @@ def main():
     print(myip)
     #id作成
     id=int(myip[3])
-    wdata=[id,200,False,10]
-    rdata=[]
+    wdata=[id,200,False,10]#送信データ
+    rdata=[]#受信データ
     print(wdata)
-    #接続処理
     connect=False
     while not connect:
         fontc = pygame.font.Font(None, 30)
@@ -361,8 +360,8 @@ def main():
                         bullet1.append(Bullet(surface,[user1.return_x(),D_SIZE_Y-USER_POS],[255,255,0],-10))
                         wdata[2]=True
                         bulletflag=True
-
-        if Single:
+        ###プレイモード
+        if Single:#シングルプレイ
             u2r=random.randint(0,1)
             u2s=random.randint(0,1)
             if u2r:
@@ -373,7 +372,7 @@ def main():
                 if not bulletflag2:
                     bullet2.append(Bullet(surface,[user2.return_x(),USER_POS],[0,255,255],10))
                     bulletflag2=True
-        else:
+        else:#マルチプレイ
             wdata[1]=user1.return_x()
             wdata[3]=user1.Hp()
             rdata=communication(iptxt,wdata)
