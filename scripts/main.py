@@ -135,6 +135,7 @@ def menu(surface):
     exit_sw = False
     bt=False
     t=Timer()
+    IP_TEXT=""
     while not exit_sw:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -259,9 +260,9 @@ def main():
     rdata=[]#受信データ
     print(wdata)
     if Single:
-        connect=False
-    else:
         connect=True
+    else:
+        connect=False
     #s=Connect()
     while not connect:
         fontc = pygame.font.Font(None, 30)
