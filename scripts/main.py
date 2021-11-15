@@ -383,8 +383,8 @@ def main():
         else:#マルチプレイ
             wdata[1]=user1.return_x()
             wdata[3]=user1.Hp()
-            rdata=communication_UDP(s,iptxt,wdata)
-            #rdata=communication(iptxt,wdata)
+            #rdata=communication_UDP(s,iptxt,wdata)
+            rdata=communication(iptxt,wdata)
             user2.updateHp(rdata[3])
             print(rdata)
             user2.X(rdata[1])
