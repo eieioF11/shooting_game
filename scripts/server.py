@@ -45,7 +45,7 @@ def send_data(client, clientno):
 		resive2 = resive
 		client.send(resive1)#データ送信
 	print(resive1,resive2)
-	client.close()
+	#client.close()
 
 server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 server.bind(("",PORT))

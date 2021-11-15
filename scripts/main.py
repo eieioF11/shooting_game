@@ -263,6 +263,7 @@ def main():
         connect=True
     else:
         connect=False
+        s=Conect(iptxt)
     #s=Connect()
     while not connect:
         fontc = pygame.font.Font(None, 30)
@@ -273,12 +274,14 @@ def main():
         for event in pygame.event.get():
             ### 終了処理
             if event.type == QUIT:
+                close(s)
                 exit()
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
+                    close(s)
                     exit()
         #rdata=communication_UDP(s,iptxt,wdata)
-        rdata=communication(iptxt,wdata)
+        rdata=communication(s,wdata)
         if rdata[0]!=0:
             connect=True
 
@@ -327,7 +330,7 @@ def main():
             pygame.display.update()
             while lose.update(1):pass
             while win.update(1):pass
-            #close(s)
+            close(s)
             while True:
                 for event in pygame.event.get():
                     ### 終了処理
@@ -351,11 +354,11 @@ def main():
         for event in pygame.event.get():
             ### 終了処理
             if event.type == QUIT:
-                #close(s)
+                close(s)
                 exit()
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
-                    #close(s)
+                    close(s)
                     exit()
                 ### キー操作
                 #pygame.key.set_repeat(100, 20)
@@ -385,7 +388,7 @@ def main():
             wdata[1]=user1.return_x()
             wdata[3]=user1.Hp()
             #rdata=communication_UDP(s,iptxt,wdata)
-            rdata=communication(iptxt,wdata)
+            rdata=communication(s,wdata)
             try:
                 user2.updateHp(rdata[3])
             except:
