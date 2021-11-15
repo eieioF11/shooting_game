@@ -292,6 +292,34 @@ def main():
         clock.tick(F_RATE)
         ### 背景色設定
         surface.fill((0,0,0))
+        ###プレイモード
+        if Single:#シングルプレイ
+            u2r=random.randint(0,1)
+            u2s=random.randint(0,1)
+            if u2r:
+                user2.addx(-USER_SPD)
+            else:
+                user2.addx(USER_SPD)
+            if u2s:
+                if not bulletflag2:
+                    bullet2.append(Bullet(surface,[user2.return_x(),USER_POS],[0,255,255],10))
+                    bulletflag2=True
+        else:#マルチプレイ
+            wdata[1]=user1.return_x()
+            wdata[3]=user1.Hp()
+            #rdata=communication_UDP(s,iptxt,wdata)
+            rdata=communication(s,wdata)
+            try:
+                user2.updateHp(rdata[3])
+            except:
+                pass
+            print(rdata)
+            user2.X(rdata[1])
+            if rdata[2]:
+                if not bulletflag2:
+                    bullet2.append(Bullet(surface,[user2.return_x(),USER_POS],[0,255,255],10))
+                    bulletflag2=True
+            wdata[2]=False
         ###描画処理
         #背景
         bg_y = (bg_y+BG_SP)%D_SIZE_Y
@@ -373,34 +401,6 @@ def main():
                         bullet1.append(Bullet(surface,[user1.return_x(),D_SIZE_Y-USER_POS],[255,255,0],-10))
                         wdata[2]=True
                         bulletflag=True
-        ###プレイモード
-        if Single:#シングルプレイ
-            u2r=random.randint(0,1)
-            u2s=random.randint(0,1)
-            if u2r:
-                user2.addx(-USER_SPD)
-            else:
-                user2.addx(USER_SPD)
-            if u2s:
-                if not bulletflag2:
-                    bullet2.append(Bullet(surface,[user2.return_x(),USER_POS],[0,255,255],10))
-                    bulletflag2=True
-        else:#マルチプレイ
-            wdata[1]=user1.return_x()
-            wdata[3]=user1.Hp()
-            #rdata=communication_UDP(s,iptxt,wdata)
-            rdata=communication(s,wdata)
-            try:
-                user2.updateHp(rdata[3])
-            except:
-                pass
-            print(rdata)
-            user2.X(rdata[1])
-            if rdata[2]:
-                if not bulletflag2:
-                    bullet2.append(Bullet(surface,[user2.return_x(),USER_POS],[0,255,255],10))
-                    bulletflag2=True
-            wdata[2]=False
 
 
 
