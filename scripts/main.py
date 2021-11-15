@@ -258,8 +258,11 @@ def main():
     wdata=[id,200,False,10]#送信データ
     rdata=[]#受信データ
     print(wdata)
-    connect=False
-    s=Connect()
+    if Single:
+        connect=False
+    else:
+        connect=True
+    #s=Connect()
     while not connect:
         fontc = pygame.font.Font(None, 30)
         textc = fontc.render("Waiting for connection", True, (96,96,255))
@@ -273,8 +276,8 @@ def main():
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     exit()
-        rdata=communication_UDP(s,iptxt,wdata)
-        #rdata=communication(iptxt,wdata)
+        #rdata=communication_UDP(s,iptxt,wdata)
+        rdata=communication(iptxt,wdata)
         if rdata[0]!=0:
             connect=True
 
@@ -323,7 +326,7 @@ def main():
             pygame.display.update()
             while lose.update(1):pass
             while win.update(1):pass
-            close(s)
+            #close(s)
             while True:
                 for event in pygame.event.get():
                     ### 終了処理
@@ -347,11 +350,11 @@ def main():
         for event in pygame.event.get():
             ### 終了処理
             if event.type == QUIT:
-                close(s)
+                #close(s)
                 exit()
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
-                    close(s)
+                    #close(s)
                     exit()
                 ### キー操作
                 #pygame.key.set_repeat(100, 20)
