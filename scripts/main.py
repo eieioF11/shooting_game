@@ -265,6 +265,7 @@ def main():
         connect=False
         s=Conect(iptxt)
     #s=Connect()
+
     while not connect:
         fontc = pygame.font.Font(None, 30)
         textc = fontc.render("Waiting for connection", True, (96,96,255))

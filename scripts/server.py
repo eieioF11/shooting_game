@@ -28,24 +28,27 @@ resive1 = "0,200,0".encode("utf-8")
 resive2 = "0,200,0".encode("utf-8")
 ###クライアント接続時の処理
 def send_data(client, clientno):
-	global resive1
-	global resive2
-	###データの受信
-	resive = client.recv(N)
-	temp = resive.decode("utf-8")
-	temp = temp.split(",")
-	print(resive)
-	temp = int(temp[0])
-	print(temp)
-	###IDの判定
-	if identification(temp):
-		resive1 = resive
-		client.send(resive2)#データ送信
-	else:
-		resive2 = resive
-		client.send(resive1)#データ送信
-	print(resive1,resive2)
-	#client.close()
+	while True:
+		try:
+			global resive1
+			global resive2
+			###データの受信
+			resive = client.recv(N)
+			temp = resive.decode("utf-8")
+			temp = temp.split(",")
+			print(resive)
+			temp = int(temp[0])
+			print(temp)
+			###IDの判定
+			if identification(temp):
+				resive1 = resive
+				client.send(resive2)#データ送信
+			else:
+				resive2 = resive
+				client.send(resive1)#データ送信
+			print(resive1,resive2)
+		except KeyboardInterrupt:
+			client.close()
 
 server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 server.bind(("",PORT))

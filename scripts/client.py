@@ -47,6 +47,7 @@ def communication(s,data):
 	except:
 		pass
 	###受信
+	#s.settimeout(3)
 	data = s.recv(N)
 	###受信データ変換
 	temp = data.decode("utf-8")
